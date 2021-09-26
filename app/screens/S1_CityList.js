@@ -4,6 +4,7 @@ import { State, TouchableHighlight, TouchableOpacity } from 'react-native-gestur
 import { fadeTextColor, normalTextColor } from '../utils/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_BASEURL, API_KEY, ICONURL } from '../utils/config'
+import { capitalizeFirstChar } from '../utils/capitalize'
 
 const CityList = ({ navigation, route }) => {
 
@@ -60,7 +61,7 @@ const CityList = ({ navigation, route }) => {
     console.log('ME ?: ', route.params?.userDeleted);
     console.log('XWRIS ?: ', route.params?.userDeleted);
 
-    const capitalizeFirstChar = string => string.charAt(0).toUpperCase() + string.slice(1)
+    
 
     const navigateToCityForecast = async (city) => {
         try {
@@ -73,7 +74,7 @@ const CityList = ({ navigation, route }) => {
             }
             const resData = await res.json();
             setLoading(false)
-            navigation.navigate("5 day forecast", resData)
+            navigation.navigate("5 day forecast", { forecastData: resData})
         } catch (error) {
             console.log(error);
         }
