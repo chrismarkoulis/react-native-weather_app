@@ -34,6 +34,7 @@ const NavigationStack = () => {
                             name='plus'
                             color='#fff'
                             size={30}
+                            style={{ marginRight: 10 }}
                         />
                     ),
                     headerLeft: () => (
@@ -41,31 +42,18 @@ const NavigationStack = () => {
                             name='thermometer'
                             color='#fff'
                             size={30}
+                            style={{ marginLeft: 10 }}
                         />
                     ),
-
                 })}
             />
             <Stack.Screen
                 name="Add new city"
                 component={AddCity}
-                // options={({ navigation, route }) => ({
-                   
-                // })}
             />
             <Stack.Screen
                 name="5 day forecast"
                 component={CityForecast}
-                options={({ navigation }) => ({
-                    headerRight: () => (
-                        <MaterialCommunityIcons
-                            onPress={() => navigation.navigate('Weather forecast')}
-                            name="delete"
-                            color="#fff"
-                            size={30}
-                        />
-                    )
-                })}
             />
         </Stack.Navigator>
     );

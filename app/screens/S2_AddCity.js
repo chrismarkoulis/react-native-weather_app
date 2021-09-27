@@ -39,6 +39,7 @@ const AddCity = ({ navigation, route }) => {
                     name="check"
                     color="#fff"
                     size={30}
+                    style={{ marginRight: 10 }}
                 />
             ),
         });

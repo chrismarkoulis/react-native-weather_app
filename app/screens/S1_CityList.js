@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { Button, Image, FlatList, StyleSheet, Text, View, TouchableWithoutFeedback, Pressable, Alert } from 'react-native';
+import { Button, Image, FlatList, StyleSheet, Text, View, TouchableWithoutFeedback, Pressable, Alert, ActivityIndicator } from 'react-native';
 import { State, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { fadeTextColor, normalTextColor } from '../utils/colors'
-import { useDispatch, useSelector } from 'react-redux'
+//import { useDispatch, useSelector } from 'react-redux'
 import { API_BASEURL, API_KEY, ICONURL } from '../utils/config'
 import { capitalizeFirstChar } from '../utils/capitalize'
 
@@ -56,25 +56,32 @@ const CityList = ({ navigation, route }) => {
 
 
     console.log('CITIES :', cities)
+    console.log('USER DELETED?: ', route.params?.userDeleted);
 
-    //const addedCity = route.params
-    console.log('ME ?: ', route.params?.userDeleted);
-    console.log('XWRIS ?: ', route.params?.userDeleted);
 
-    
+
 
     const navigateToCityForecast = async (city) => {
         try {
             setLoading(true)
-            const res = await fetch(`${API_BASEURL}/forecast?q=${city}&units=metric&appid=${API_KEY}`);
+            const forecastRes = await fetch(`${API_BASEURL}/forecast?q=${city}&units=metric&appid=${API_KEY}`);
+            //const weatherRes = await fetch(`${API_BASEURL}/weather?q=${city}&units=metric&appid=${API_KEY}`);
             console.log('API CALL...!!!');
-            if (!res.ok) {
-                const resData = await res.json();
-                Alert.alert('Validation', `${resData.message}`, [{ text: 'OK' }]);
+            if (!forecastRes.ok) {
+                const forecastResData = await forecastRes.json();
+                Alert.alert('Validation', `${forecastResData.message}`, [{ text: 'OK' }]);
             }
-            const resData = await res.json();
+            // if (!weatherRes.ok) {
+            //     const weatherResData = await weatherRes.json();
+            //     Alert.alert('Validation', `${weatherResData.message}`, [{ text: 'OK' }]);
+            // }
+            const forecastResData = await forecastRes.json();
+            //const weatherResData = await weatherRes.json();
             setLoading(false)
-            navigation.navigate("5 day forecast", { forecastData: resData})
+            navigation.navigate("5 day forecast", {
+                forecastData: forecastResData,
+                //weatherData: weatherResData
+            })
         } catch (error) {
             console.log(error);
         }
@@ -112,10 +119,8 @@ const CityList = ({ navigation, route }) => {
                 )} />
         </View>
     ) : (
-        <View style={styles.container}>
-            <Text style={styles.title}>
-                Loading...
-            </Text>
+        <View style={styles.spinner}>
+            <ActivityIndicator size="large" color="#505050" />
         </View>
     )
 }
@@ -134,6 +139,11 @@ const styles = StyleSheet.create({
         marginRight: 5,
         marginTop: 0,
         marginBottom: 6,
+    },
+    spinner: {
+        flex: 1,
+        justifyContent: "center",
+        padding: 10,
     },
     container: {
         flex: 1,
@@ -177,12 +187,13 @@ const styles = StyleSheet.create({
         color: normalTextColor
     },
     listTitle: {
-        color: fadeTextColor
+        color: fadeTextColor,
+        marginLeft: 10
     },
     image: {
         width: 50,
         height: 40,
-    }
+    },
 });
 
 export default CityList
