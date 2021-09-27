@@ -24,7 +24,6 @@ const CityList = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
 
     const onRefresh = useCallback(() => {
-        //setLoading(true);
         //setCities(prevState => [...prevState])
         fetchInitialData()
         //setLoading(false)

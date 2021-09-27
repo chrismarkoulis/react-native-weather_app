@@ -19,7 +19,7 @@ const CityForecast = ({ route, navigation }) => {
     }, [route.params?.forecastData])
 
     if (cityData && dailyData) {
-        const time = getTime(cityData.list[1].dt_txt)
+        const time = getTime(cityData.list[0].dt_txt)
         if (!time === '12:00 PM') {
             dailyData.shift()
         } else {
@@ -56,14 +56,14 @@ const CityForecast = ({ route, navigation }) => {
                         {cityData.city.name}, {cityData.city.country}
                     </Text>
                     <Text style={styles.title_date}>
-                        {getDayNameFirst3Letters(cityData.list[1].dt_txt)}, {getTime(cityData.list[1].dt_txt)}, {capitalizeFirstChar(cityData.list[1].weather[0].description)}
+                        {getDayNameFirst3Letters(cityData.list[0].dt_txt)}, {getTime(cityData.list[1].dt_txt)}, {capitalizeFirstChar(cityData.list[0].weather[0].description)}
                     </Text>
                 </View>
 
                 <View style={styles.title_temp}>
-                    <Text style={styles.main_temp}>{cityData.list[1].main.temp.toFixed()}&#8451;</Text>
+                    <Text style={styles.main_temp}>{cityData.list[0].main.temp.toFixed()}&#8451;</Text>
 
-                    <Image style={styles.image} source={{ uri: `${ICONURL}/${cityData.list[1].weather[0].icon}@2x.png` }} />
+                    <Image style={styles.image} source={{ uri: `${ICONURL}/${cityData.list[0].weather[0].icon}@2x.png` }} />
                 </View>
 
                 <View style={styles.wind_humidity}>
@@ -71,7 +71,7 @@ const CityForecast = ({ route, navigation }) => {
                         <MaterialCommunityIcons
                             name="send"
                             color="grey"
-                            size={20} />
+                            size={25} />
                         <Text style={styles.wind_humidity_text}>
                             {cityData.list[1].wind.speed.toFixed()} km/h
                         </Text>
@@ -80,7 +80,7 @@ const CityForecast = ({ route, navigation }) => {
                         <MaterialCommunityIcons
                             name="water-percent"
                             color="grey"
-                            size={20} />
+                            size={25} />
                         <Text style={styles.wind_humidity_text}>
                             {cityData.list[1].main.humidity}%
                         </Text>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     },
     forecast_container: {
         paddingTop: 2,
-        paddingLeft: 15,
+        paddingLeft: 20,
         paddingRight: 10,
         paddingBottom: 15,
     },
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         color: fadeTextColor
     },
     main_temp: {
-        fontSize: 50,
+        fontSize: 62,
         marginTop: 8,
         color: 'grey'
     },
@@ -166,9 +166,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        width: 80,
-        height: 70,
-        marginLeft: 60,
+        width: 90,
+        height: 80,
+        marginLeft: 50,
         marginTop: 12
     },
     list_image: {
@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 30,
-        marginBottom: 15
+        marginTop: 40,
+        marginBottom: 10
     },
     wind: {
         flexDirection: 'row',
@@ -200,7 +200,8 @@ const styles = StyleSheet.create({
     },
     wind_humidity_text: {
         marginLeft: 30,
-        color: fadeTextColor
+        color: fadeTextColor,
+        alignSelf: 'center'
     },
     forecast_list_container: {
         flex: 0,
@@ -212,11 +213,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 25,
+        paddingTop: 10,
         marginLeft: 0,
         marginRight: 0,
         marginTop: 0,
-        marginBottom: 2,
+        marginBottom: 0,
     },
     list_day_text: {
         fontSize: 18,
