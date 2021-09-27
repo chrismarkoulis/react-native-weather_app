@@ -90,8 +90,6 @@ const CityForecast = ({ route, navigation }) => {
                     {dailyData ? <FlatList data={dailyData}
                         scrollEnabled={false}
                         initialNumToRender={4}
-                        //refreshing={isFetching}
-                        //onRefresh={() => onRefresh(page, true)}
                         keyExtractor={item => item.dt}
                         renderItem={({ item }) => (
                             <View style={styles.listRow}>
