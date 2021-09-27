@@ -1,14 +1,10 @@
 import React from 'react';
-import { Button, View, Alert } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import CityList from '../screens/S1_CityList';
 import AddCity from '../screens/S2_AddCity';
 import CityForecast from '../screens/S3_CityForecast';
-
 import { headerColor, headerTextColor } from '../utils/colors'
-import { State } from 'react-native-gesture-handler';
 
 
 const Stack = createStackNavigator();

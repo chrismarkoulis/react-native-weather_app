@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { Button, Image, FlatList, StyleSheet, Text, View, TouchableWithoutFeedback, Pressable, Alert, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
+import { Button, Image, FlatList, StyleSheet, Text, View, TouchableWithoutFeedback, Pressable, Alert, ActivityIndicator, RefreshControl } from 'react-native';
 import { State, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { fadeTextColor, normalTextColor } from '../utils/colors'
 //import { useDispatch, useSelector } from 'react-redux'
 import { API_BASEURL, API_KEY, ICONURL } from '../utils/config'
 import { capitalizeFirstChar } from '../utils/capitalize'
+
 
 const CityList = ({ navigation, route }) => {
 
@@ -20,10 +21,18 @@ const CityList = ({ navigation, route }) => {
 
     const [predefinedCities, setPredefinedCities] = useState()
     const [cities, setCities] = useState()
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(async () => {
+    const onRefresh = useCallback(() => {
+        //setLoading(true);
+        //setCities(prevState => [...prevState])
+        fetchInitialData()
+        //setLoading(false)
+    }, [loading]);
+
+    const fetchInitialData = async () => {
         try {
+            setLoading(true)
             const res = await fetch(`${API_BASEURL}/group?id=${ids}&appid=${API_KEY}`);
             console.log('API CALL...!!!');
             if (!res.ok) {
@@ -37,7 +46,10 @@ const CityList = ({ navigation, route }) => {
         } catch (error) {
             console.log(error);
         }
+    }
 
+    useEffect(() => {
+        fetchInitialData();
     }, [])
 
 
@@ -65,22 +77,15 @@ const CityList = ({ navigation, route }) => {
         try {
             setLoading(true)
             const forecastRes = await fetch(`${API_BASEURL}/forecast?q=${city}&units=metric&appid=${API_KEY}`);
-            //const weatherRes = await fetch(`${API_BASEURL}/weather?q=${city}&units=metric&appid=${API_KEY}`);
             console.log('API CALL...!!!');
             if (!forecastRes.ok) {
                 const forecastResData = await forecastRes.json();
                 Alert.alert('Validation', `${forecastResData.message}`, [{ text: 'OK' }]);
             }
-            // if (!weatherRes.ok) {
-            //     const weatherResData = await weatherRes.json();
-            //     Alert.alert('Validation', `${weatherResData.message}`, [{ text: 'OK' }]);
-            // }
             const forecastResData = await forecastRes.json();
-            //const weatherResData = await weatherRes.json();
             setLoading(false)
             navigation.navigate("5 day forecast", {
-                forecastData: forecastResData,
-                //weatherData: weatherResData
+                forecastData: forecastResData
             })
         } catch (error) {
             console.log(error);
@@ -96,8 +101,10 @@ const CityList = ({ navigation, route }) => {
                 data={cities}
                 scrollEnabled={true}
                 initialNumToRender={10}
-                //refreshing={isFetching}
-                //onRefresh={() => onRefresh(page, true)}
+                refreshing={loading}
+                refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+                  }
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.listRow}>
@@ -128,13 +135,10 @@ const CityList = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     listRow: {
         flex: 1,
-        flexDirection: 'row',  // main axis
-        justifyContent: 'flex-start', // main axis
-        alignItems: 'center', // cross axis
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
         paddingTop: 25,
-        // paddingBottom: 10,
-        // paddingLeft: 5,
-        // paddingRight: 16,
         marginLeft: 0,
         marginRight: 5,
         marginTop: 0,
@@ -157,11 +161,6 @@ const styles = StyleSheet.create({
         marginTop: 4
     },
     item: {
-        // width: '100%',
-        // flexDirection: 'row',
-        // padding: 8,
-        // fontSize: 18,
-        // height: 70,
         flex: 1,
         flexDirection: 'column',
     },

@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { ScrollView, Image, StyleSheet, Text, View, ActivityIndicator, FlatList } from 'react-native';
+import { Image, StyleSheet, Text, View, ActivityIndicator, FlatList } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getDayName, getDayNameFirst3Letters, getTime } from '../utils/date-helper';
-import { getTimeFromUnix } from '../utils/timezone'
 import { capitalizeFirstChar } from '../utils/capitalize'
 import { fadeTextColor, normalTextColor } from '../utils/colors'
 import { ICONURL } from '../utils/config'
@@ -11,27 +10,22 @@ const CityForecast = ({ route, navigation }) => {
 
     const [cityData, setCityData] = useState()
     const [dailyData, setDailyData] = useState()
-    const [currentTimestamp, setCurrentTimestamp] = useState()
-    const [timezone, setTimezone] = useState()
 
     useEffect(() => {
         if (route.params?.forecastData) {
             setCityData(route.params?.forecastData)
             setDailyData(route.params?.forecastData.list.filter(day => day.dt_txt.includes('12:00:00')))
         }
-       
     }, [route.params?.forecastData])
 
-    // useEffect(() => {
-    //     if (route.params?.weatherData) {
-    //         setCurrentTimestamp(route.params?.weatherData.dt)
-    //         setTimezone(route.params?.weatherData.timezone)
-    //     }
-    // }, [route.params?.weatherData])
-
-    dailyData && dailyData.shift()
-
-    //console.log('UNIX TIMESTAMP: ', getTimeFromUnix(timezone));
+    if (cityData && dailyData) {
+        const time = getTime(cityData.list[1].dt_txt)
+        if (!time === '12:00 PM') {
+            dailyData.shift()
+        } else {
+            dailyData.pop()
+        }
+    }
 
     console.log('DAILY: ', dailyData);
 
@@ -170,8 +164,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'row',
         alignItems: 'center'
-        //justifyContent: 'space-evenly',
-        //marginLeft: 'auto'
     },
     image: {
         width: 80,
@@ -198,17 +190,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 30,
         marginBottom: 15
-        //justifyContent: 'space-evenly',
     },
     wind: {
         flexDirection: 'row',
-        //alignItems: 'center',
-
     },
     humidity: {
         flexDirection: 'row',
         marginLeft: 60
-        // alignItems: 'center'
     },
     wind_humidity_text: {
         marginLeft: 30,
@@ -217,14 +205,13 @@ const styles = StyleSheet.create({
     forecast_list_container: {
         flex: 0,
         backgroundColor: '#fff',
-        //alignItems: 'strech',
         justifyContent: 'center',
     },
     listRow: {
         flex: 1,
-        flexDirection: 'row',  // main axis
-        justifyContent: 'space-between', // main axis
-        alignItems: 'center', // cross axis
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         paddingTop: 25,
         marginLeft: 0,
         marginRight: 0,

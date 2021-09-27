@@ -7,9 +7,6 @@ import {
     StyleSheet,
     View,
     TextInput,
-    TouchableWithoutFeedback,
-    Button,
-    Pressable
 } from 'react-native'
 import { API_BASEURL, API_KEY } from '../utils/config'
 
@@ -29,7 +26,6 @@ const AddCity = ({ navigation, route }) => {
                                 Alert.alert('Validation', `${searchResp.message}\nPlease enter a valid city name`, [{ text: 'OK' }]);
                             } else {
                                 navigation.navigate('Weather forecast', { searchResponse: searchResp })
-                                //Alert.alert('Navigation to main', `${search}`, [{ text: 'OK' }])
                             }
                         } catch (error) {
                             console.log(error);
@@ -65,11 +61,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     heading: {
-        // fontSize: 20,
-        // textAlign: 'center',
         marginBottom: -8,
-        // alignItems: 'flex-left'
-        //color: '#4169E1',
         color: '#0080ff',
         marginTop: 10
     },
