@@ -32,6 +32,7 @@ const CityForecast = ({ route, navigation }) => {
             const currentForecast = dailyData.filter(item => item.dt_txt.includes(today))
             console.log(currentForecast);
             const cropped = dailyData.filter(item => item !== currentForecast[0])
+            if (cropped.length > 4) cropped.length = 4;
             setDailyDataCrop(cropped)
         }
 
@@ -74,7 +75,7 @@ const CityForecast = ({ route, navigation }) => {
                 </View>
 
                 <View style={styles.title_temp}>
-                    <Text style={styles.main_temp}>{cityData.list[1].main.temp.toFixed()}&#8451;</Text>
+                    <Text style={styles.main_temp}>{cityData.list[0].main.temp.toFixed()}&#8451;</Text>
 
                     <Image style={styles.image} source={{ uri: `${ICONURL}/${cityData.list[0].weather[0].icon}@2x.png` }} />
                 </View>
@@ -86,7 +87,7 @@ const CityForecast = ({ route, navigation }) => {
                             color="grey"
                             size={25} />
                         <Text style={styles.wind_humidity_text}>
-                            {cityData.list[1].wind.speed.toFixed()} km/h
+                            {cityData.list[0].wind.speed.toFixed()} km/h
                         </Text>
                     </View>
                     <View style={styles.humidity}>
@@ -95,7 +96,7 @@ const CityForecast = ({ route, navigation }) => {
                             color="grey"
                             size={25} />
                         <Text style={styles.wind_humidity_text}>
-                            {cityData.list[1].main.humidity}%
+                            {cityData.list[0].main.humidity}%
                         </Text>
                     </View>
                 </View>
