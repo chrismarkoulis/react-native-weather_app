@@ -11,3 +11,13 @@ export const getDayNameFirst3Letters = (date) => {
 export const getTime = (date) => {
   return moment(date).format('HH:mm A')
 }
+
+export const getTimeFromTimezone = (timestamp, timezone) => {
+  // const timezoneInMinutes = timezone / 60;
+  // return moment().utcOffset(timezoneInMinutes).format("h:mm A");
+
+
+  // moment.unix - Unix Timestamp (seconds)
+  return moment.unix(timestamp).utc().add(timezone, 's');
+
+}

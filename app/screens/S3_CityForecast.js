@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Image, StyleSheet, Text, View, ActivityIndicator, FlatList } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { getDayName, getDayNameFirst3Letters, getTime } from '../utils/date-helper';
+import { getDayName, getDayNameFirst3Letters, getTime, getTimeFromTimezone } from '../utils/date-helper';
 import { capitalizeFirstChar } from '../utils/capitalize'
 import { fadeTextColor, normalTextColor } from '../utils/colors'
 import { ICONURL } from '../utils/config'
@@ -10,17 +10,22 @@ const CityForecast = ({ route, navigation }) => {
 
     const [cityData, setCityData] = useState()
     const [dailyData, setDailyData] = useState()
+    // const [timestamp, setTimestamp] = useState()
+    // const [timezone, setTimezone] = useState()
 
     useEffect(() => {
         if (route.params?.forecastData) {
             setCityData(route.params?.forecastData)
             setDailyData(route.params?.forecastData.list.filter(day => day.dt_txt.includes('12:00:00')))
+            // setTimestamp(route.params?.forecastData.list[0].dt)
+            // setTimezone(route.params?.forecastData.timezone)
         }
     }, [route.params?.forecastData])
 
+
     if (cityData && dailyData) {
-        const time = getTime(cityData.list[0].dt_txt)
-        if (!time === '12:00 PM') {
+        const time = getTime(cityData.list[1].dt_txt)
+        if (time == '12:00 PM') {
             dailyData.shift()
         } else {
             dailyData.pop()
@@ -28,6 +33,8 @@ const CityForecast = ({ route, navigation }) => {
     }
 
     console.log('DAILY: ', dailyData);
+
+    //route.params?.forecastData && console.log(getTimeFromTimezone(timestamp, timezone));
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -56,12 +63,12 @@ const CityForecast = ({ route, navigation }) => {
                         {cityData.city.name}, {cityData.city.country}
                     </Text>
                     <Text style={styles.title_date}>
-                        {getDayNameFirst3Letters(cityData.list[0].dt_txt)}, {getTime(cityData.list[1].dt_txt)}, {capitalizeFirstChar(cityData.list[0].weather[0].description)}
+                        {getDayNameFirst3Letters(cityData.list[1].dt_txt)}, {getTime(cityData.list[1].dt_txt)}, {capitalizeFirstChar(cityData.list[1].weather[0].description)}
                     </Text>
                 </View>
 
                 <View style={styles.title_temp}>
-                    <Text style={styles.main_temp}>{cityData.list[0].main.temp.toFixed()}&#8451;</Text>
+                    <Text style={styles.main_temp}>{cityData.list[1].main.temp.toFixed()}&#8451;</Text>
 
                     <Image style={styles.image} source={{ uri: `${ICONURL}/${cityData.list[0].weather[0].icon}@2x.png` }} />
                 </View>
