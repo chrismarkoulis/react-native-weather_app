@@ -10,6 +10,7 @@ const CityForecast = ({ route, navigation }) => {
 
     const [cityData, setCityData] = useState()
     const [dailyData, setDailyData] = useState()
+    const [dailyDataCrop, setDailyDataCrop] = useState()
     // const [timestamp, setTimestamp] = useState()
     // const [timezone, setTimezone] = useState()
 
@@ -23,16 +24,21 @@ const CityForecast = ({ route, navigation }) => {
     }, [route.params?.forecastData])
 
 
-    if (cityData && dailyData) {
-        const time = getTime(cityData.list[1].dt_txt)
-        if (time == '12:00 PM') {
-            dailyData.shift()
-        } else {
-            dailyData.pop()
+    useEffect(() => {
+        if (cityData && dailyData) {
+            const d = new Date()
+            const today = d.toISOString().slice(0, 10)
+            
+            const currentForecast = dailyData.filter(item => item.dt_txt.includes(today))
+            console.log(currentForecast);
+            const cropped = dailyData.filter(item => item !== currentForecast[0])
+            setDailyDataCrop(cropped)
         }
-    }
 
-    console.log('DAILY: ', dailyData);
+    }, [cityData, dailyData])
+
+
+    console.log('DAILY: ', dailyDataCrop);
 
     //route.params?.forecastData && console.log(getTimeFromTimezone(timestamp, timezone));
 
@@ -94,7 +100,7 @@ const CityForecast = ({ route, navigation }) => {
                     </View>
                 </View>
                 <View style={styles.forecast_list_container}>
-                    {dailyData ? <FlatList data={dailyData}
+                    {dailyData ? <FlatList data={dailyDataCrop}
                         scrollEnabled={false}
                         initialNumToRender={4}
                         keyExtractor={item => item.dt}
