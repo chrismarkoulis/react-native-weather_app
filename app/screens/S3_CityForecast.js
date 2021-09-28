@@ -69,7 +69,7 @@ const CityForecast = ({ route, navigation }) => {
                         {cityData.city.name}, {cityData.city.country}
                     </Text>
                     <Text style={styles.title_date}>
-                        {getDayNameFirst3Letters(cityData.list[1].dt_txt)}, {getTime(cityData.list[1].dt_txt)}, {capitalizeFirstChar(cityData.list[1].weather[0].description)}
+                        {getDayNameFirst3Letters(cityData.list[0].dt_txt)}, {getTime(cityData.list[0].dt_txt)}, {capitalizeFirstChar(cityData.list[0].weather[0].description)}
                     </Text>
                 </View>
 
